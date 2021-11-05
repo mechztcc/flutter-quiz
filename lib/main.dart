@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quiz/resposta.dart';
+import 'package:quiz/questionario.dart';
+import 'package:quiz/resultado.dart';
 
 import './questao.dart';
 
@@ -25,6 +26,14 @@ class _PerguntaAppState extends State<PerguntaApp> {
     });
   }
 
+  void _reiniciar() {
+    setState(() {
+      _perguntaSelecionada = 0;
+      print(concluido);
+      concluido = false;
+    });
+  }
+
   final List<Map<String, Object>> _perguntas = const [
     {
       'texto': 'Qual a cor da faixa branca',
@@ -46,42 +55,17 @@ class _PerguntaAppState extends State<PerguntaApp> {
   ];
 
   Widget build(BuildContext context) {
-    List<String> respostas =
-        _perguntas[_perguntaSelecionada].cast()['respostas'];
-    List<Widget> widgets = [];
-    respostas.forEach((element) {
-      widgets.add(Resposta(element, _responder));
-    });
-
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Perguntas'),
-        ),
-        body: !concluido
-            ? Column(
-                children: [
-                  Questao(_perguntas[_perguntaSelecionada]['texto'].toString()),
-                  ...widgets
-                ],
-              )
-            : Column(
-                children: [
-                  Center(
-                      child: Text('Questionário concluído!',
-                          style: TextStyle(fontSize: 28))),
-                  Center(
-                      child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              _perguntaSelecionada = 0;
-                              concluido = false;
-                            });
-                          },
-                          child: Text('Reiniciar'))),
-                ],
-              ),
-      ),
+          appBar: AppBar(
+            title: Text('Perguntas'),
+          ),
+          body: !concluido
+              ? Questionario(
+                  perguntas: _perguntas,
+                  perguntaSelecionada: _perguntaSelecionada,
+                  responder: _responder)
+              : Resultado(reiniciar: _reiniciar)),
     );
   }
 }
