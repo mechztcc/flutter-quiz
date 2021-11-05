@@ -12,22 +12,41 @@ class PerguntaApp extends StatefulWidget {
 }
 
 class _PerguntaAppState extends State<PerguntaApp> {
-  int perguntaSelecionada = 0;
+  int _perguntaSelecionada = 0;
 
-  void responder() {
+  void _responder() {
     setState(() {
-      perguntaSelecionada++;
-      print(perguntaSelecionada);
+      _perguntaSelecionada++;
+      print(_perguntaSelecionada);
     });
   }
 
   Widget build(BuildContext context) {
-    final List<String> perguntas = [
-      'Qual a cor da faixa branca',
-      'Qual a cor da faixa amarela',
-      'Qual a cor da faixa preta',
-      'Qual a cor da faixa azul',
+    final List<Map<String, Object>> perguntas = [
+      {
+        'texto': 'Qual a cor da faixa branca',
+        'respostas': ['branca', 'Azul', 'Verde', 'Preta']
+      },
+      {
+        'texto': 'Quantos chutes são aprendidos na faixa branca do Tae kwon Do',
+        'respostas': ['4', '5', '1', '3']
+      },
+      {
+        'texto': 'Qual o Teguk aprendido na faixa branca do Tae Kwon Do?',
+        'respostas': [
+          'Saju Jirugui',
+          'Nabe Jirugui',
+          'Oppi Jirugui',
+          'Ninja Jirugui'
+        ]
+      },
     ];
+
+    List<String> respostas = perguntas[_perguntaSelecionada].cast()['respostas'];
+    List<Widget> widgets = [];
+    respostas.forEach((element) {
+      widgets.add(Resposta(element, _responder));
+    });
 
     return MaterialApp(
       home: Scaffold(
@@ -35,12 +54,9 @@ class _PerguntaAppState extends State<PerguntaApp> {
           title: Text('Perguntas'),
         ),
         body: Column(
-          children: [ 
-            Questao(perguntas[perguntaSelecionada]),
-            Resposta('Resposta 1', responder),
-            Resposta('Resposta 2', responder),
-            Resposta('Resposta 3', responder),
-           
+          children: [
+            Questao(perguntas[_perguntaSelecionada]['texto'].toString()),
+            ...widgets
           ],
         ),
       ),
